@@ -1,23 +1,50 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useState } from 'react';
+import { Card, Row, Col, Divider, Input, Button } from 'antd';
+import foods from './foods.json';
+import FoodBox from './components/Foodbox';
+import AddFood from './components/AddFood';
+import SearchFood from './components/SearchFood';
+import TodaysFood from './components/TodaysFood';
+
 
 function App() {
-  return (
+
+   const [foodList, setFoodList] = useState(foods)
+  const [totalCalories, setTotalCalories] = useState(0)
+  const [todaysFoodArr, setTodaysFoodArr] = useState([])
+
+  const addNewFood = (newFood) => {
+    const updatedFoodList = [...foodList, newFood];
+    setFoodList(updatedFoodList)
+  }
+
+  const search = (input) => {
+    const filteredFoodArray = foodList.filter(elm => elm.name.toLowerCase().includes(input.toLowerCase()));
+    setFoodList(filteredFoodArray);
+  }
+
+  const addTodaysFood = (quantity) => {
+    console.log(quantity)
+
+  }
+
+return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <AddFood addFood={addNewFood} />
+    <SearchFood search={search}/>
+      <div>
+      <div className="columns">
+        <div className="column">
+          {foodList.map((item) => {
+            return <FoodBox key={item.name} item={item} />;
+          })}
+        </div>
+        <div className="column">
+          <TodaysFood totalCalories={totalCalories} handleTotal={()=> addTodaysFood()}/>
+        </div>
+      </div>
+      </div>
     </div>
   );
 }
